@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="100" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="32">
+ <tileset firstgid="1" source="tilemap_packed1.tsx"/>
+ <layer id="1" name="backGround" width="100" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzt0jESQDAQheE9A7r0aNHhBFG5/2W8AzBD7MZOvOKbSSPJvxFFJBIRERFRdhXU0Di4C5tFWuigL6zLqtnaDAusxl3hJu/NnpXa9cQAI0wJ3+b+D2Pms7zP/6v3CBfrP9sVbCc09k2R2vdmNpozPQANDHJd
+  </data>
+ </layer>
+ <layer id="7" name="layer1" width="100" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwSgYBaNgFAwU0KWR2lEwCkBAhopmJVLRrKECyuhkTwEZekopsG+oxiUlfiYFtJChp4sC++jlL2qDwRwfuIAXFjwKyAMA5hUG9w==
+  </data>
+ </layer>
+ <objectgroup id="6" name="key">
+  <object id="30" x="1472" y="128" width="16" height="16"/>
+  <object id="31" x="1482" y="241" width="1.5" height="0.5"/>
+ </objectgroup>
+ <objectgroup id="4" name="flag">
+  <object id="25" x="1568" y="144" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="5" name="heart">
+  <object id="28" x="640" y="112" width="16" height="16"/>
+  <object id="29" x="816" y="112" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="3" name="boxes">
+  <object id="11" x="78.6667" y="160.667" width="48.6667" height="30.6667"/>
+  <object id="17" x="496" y="176" width="16" height="16"/>
+  <object id="18" x="544" y="160" width="16" height="32"/>
+  <object id="19" x="576" y="128" width="160" height="16"/>
+  <object id="20" x="1375.5" y="160" width="48" height="16"/>
+  <object id="21" x="1440" y="144" width="48" height="16"/>
+ </objectgroup>
+ <objectgroup id="2" name="ground">
+  <object id="2" x="0" y="192" width="272" height="16"/>
+  <object id="5" x="352" y="192" width="480" height="16"/>
+ </objectgroup>
+</map>
