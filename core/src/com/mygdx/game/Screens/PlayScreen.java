@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Screens.Scenes.Hud;
 import com.mygdx.game.Sprites.StrongManCharacter;
 import com.mygdx.game.StrongMan;
+import com.mygdx.game.Tools.WorldCreator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,81 +37,34 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private World world;
     private Box2DDebugRenderer b2dr;
+    private StrongManCharacter player;
 
 
 
     public PlayScreen(StrongMan game){
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new StretchViewport(StrongMan.V_WIDTH,StrongMan.V_HEIGHT,gameCam);
+        gamePort = new StretchViewport(StrongMan.V_WIDTH/ StrongMan.PPM,StrongMan.V_HEIGHT/ StrongMan.PPM,gameCam);
         hud = new Hud(game.batch);
-        MapLoad();
-        StrongManCharacter character = new StrongManCharacter(world);
-
-
-
-    }
-    public void MapLoad(){
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("strongManMap.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map,1/ StrongMan.PPM);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
-        world = new World(new Vector2(0,0),true);
+        world = new World(new Vector2(0,-10),true);
         b2dr = new Box2DDebugRenderer();
-        BodyDef bodyDef = new BodyDef();
-        PolygonShape shap = new PolygonShape();
-        FixtureDef fixtureDef = new FixtureDef();
-        Body body;
-        for (MapObject object: map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth()/2),(rect.getY() + rect.getHeight()/2));
-            body = world.createBody(bodyDef);
-            shap.setAsBox(rect.getWidth()/2,rect.getHeight()/2);
-            fixtureDef.shape = shap;
-            body.createFixture(fixtureDef);
-        }
-        for (MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth()/2),(rect.getY() + rect.getHeight()/2));
-            body = world.createBody(bodyDef);
-            shap.setAsBox(rect.getWidth()/2,rect.getHeight()/2);
-            fixtureDef.shape = shap;
-            body.createFixture(fixtureDef);
-        }
-        for (MapObject object: map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth()/2),(rect.getY() + rect.getHeight()/2));
-            body = world.createBody(bodyDef);
-            shap.setAsBox(rect.getWidth()/2,rect.getHeight()/2);
-            fixtureDef.shape = shap;
-            body.createFixture(fixtureDef);
-        }
-        for (MapObject object: map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth()/2),(rect.getY() + rect.getHeight()/2));
-            body = world.createBody(bodyDef);
-            shap.setAsBox(rect.getWidth()/2,rect.getHeight()/2);
-            fixtureDef.shape = shap;
-            body.createFixture(fixtureDef);
-        }
-        for (MapObject object: map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth()/2),(rect.getY() + rect.getHeight()/2));
-            body = world.createBody(bodyDef);
-            shap.setAsBox(rect.getWidth()/2,rect.getHeight()/2);
-            fixtureDef.shape = shap;
-            body.createFixture(fixtureDef);
-        }
+        new WorldCreator(world,map);
+        player = new StrongManCharacter(world);
+
+
+
     }
     public void handInput(float dt){
-        if(Gdx.input.isTouched()){
-        gameCam.position.x += 100*dt;
-        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP))
+            player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
+            player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
+            player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
 
     }
 
@@ -118,6 +73,10 @@ public class PlayScreen implements Screen {
         gameCam.update();
         renderer.setView(gameCam);
         world.step(1/60f,6,2);
+        gameCam.position.x = player.b2body.getPosition().x;
+        hud.setWorldTimer((int) player.b2body.getPosition().x);
+
+
     }
     @Override
     public void show() {
@@ -159,6 +118,11 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
 
     }
 }
