@@ -13,18 +13,21 @@ public abstract class InterActiveTileObject {
     private Rectangle bounds;
     private Body body;
 
-    public InterActiveTileObject( World world,TiledMap map, Rectangle bounds) {
+    public  InterActiveTileObject( World world,TiledMap map, Rectangle bounds) {
         this.map = map;
         this.world = world;
         this.bounds = bounds;
         BodyDef bodyDef = new BodyDef();
-        PolygonShape shap = new PolygonShape();
-        FixtureDef fixtureDef = new FixtureDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set((bounds.getX() + bounds.getWidth()/2)/ StrongMan.PPM,(bounds.getY() + bounds.getHeight()/2)/ StrongMan.PPM);
         body = world.createBody(bodyDef);
+
+        PolygonShape shap = new PolygonShape();
         shap.setAsBox(bounds.getWidth()/2/ StrongMan.PPM,bounds.getHeight()/2/ StrongMan.PPM);
+
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shap;
+
         body.createFixture(fixtureDef);
     }
 }
