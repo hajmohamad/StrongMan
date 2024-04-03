@@ -1,4 +1,5 @@
 package com.mygdx.game.Sprites;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -36,7 +37,6 @@ public class StrongManCharacter extends Sprite {
         super(screen.getAtlas().findRegion("Walk"));
         stateTimer = 0;
         viewport = vp;
-
         this.world = world;
         runingRight = true;
         currentState = state.walking;
@@ -48,7 +48,8 @@ public class StrongManCharacter extends Sprite {
     }
 
     public void update(float dt) {
-        setPosition(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getWidth()) +1.35f / 2);
+        setPosition(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getWidth())+2.35f  / 2);
+
         setRegion(getFrame(dt));
     }
 
@@ -112,19 +113,24 @@ public class StrongManCharacter extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(1 / StrongMan.PPM);
         fdef.shape = shape;
+        /// add body rectangle
         Vector2[] vertices = new Vector2[4];
-
-
         vertices[0] = new Vector2(0f  , 0.2f  );
-        vertices[1] = new Vector2(0f , 0.4f  );
-        vertices[2] = new Vector2(0.01f , 0.4f);
+        vertices[1] = new Vector2(0f , 0.6f  );
+        vertices[2] = new Vector2(0.01f , 0.6f);
         vertices[3] = new Vector2(0.01f , 0.2f);
-
         PolygonShape shape2 = new PolygonShape();
-
         shape2.set(vertices);
         fdef.shape = shape2;
-        b2body.createFixture(fdef);
+        fdef.filter.categoryBits = StrongMan.Man_bit;
+        fdef.filter.maskBits = StrongMan.default_bit;
+        ///// add sensor shap
+        PolygonShape sensorShape = new PolygonShape();
+        sensorShape.set(vertices);
+        fdef.shape = sensorShape;
+        b2body.createFixture(fdef).setUserData("strongMan");
+        fdef.isSensor = true;
+
 
 
     }
@@ -148,8 +154,8 @@ public class StrongManCharacter extends Sprite {
         dead = new TextureRegion(getTexture(), 2 + (3 * 128), 2, 128, 128);
 
         stand = new TextureRegion(getTexture(), 2, 262, 128, 128);
-        setBounds(0, 10/2.0f, 1 / 2.0f, 1 / 2.0f);
-        setRegion(dead);
+        setBounds(0, 10/2.0f, 1.0f, 1.0f);
+        setRegion(stand);
     }
     public void handInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)&&b2body.getLinearVelocity().y==0)

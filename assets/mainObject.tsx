@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.4" name="mainObject" tilewidth="16" tileheight="16" tilecount="81" columns="0">
+<tileset version="1.2" tiledversion="1.3.4" name="mainObject" tilewidth="18" tileheight="18" tilecount="82" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="16" height="16" source="craftpix-net-965049-free-industrial-zone-tileset-pixel-art/1_Tiles2/IndustrialTile_01.png"/>
@@ -243,5 +243,8 @@
  </tile>
  <tile id="80">
   <image width="16" height="16" source="craftpix-net-965049-free-industrial-zone-tileset-pixel-art/1_Tiles2/IndustrialTile_81.png"/>
+ </tile>
+ <tile id="81">
+  <image width="18" height="18" source="craftpix-net-965049-free-industrial-zone-tileset-pixel-art/1_Tiles2/tile_0044.png"/>
  </tile>
 </tileset>

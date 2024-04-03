@@ -25,6 +25,7 @@ import com.mygdx.game.Sprites.StrongManCharacter;
 import com.mygdx.game.Sprites.ground;
 import com.mygdx.game.StrongMan;
 
+import com.mygdx.game.Tools.WorldContactListener;
 import com.mygdx.game.Tools.WorldCreator;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class PlayScreen implements Screen {
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new StretchViewport((StrongMan.V_WIDTH)/ (StrongMan.PPM),StrongMan.V_HEIGHT/ StrongMan.PPM,gameCam);
-       // hud = new Hud(game.batch);
+        hud = new Hud(game.batch);
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("strongManMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map,1/ StrongMan.PPM);
@@ -65,6 +66,7 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer(false,false,false,false,false,false);
         new WorldCreator(world,map);
         player = new StrongManCharacter(world, this,gamePort);
+        world.setContactListener(new WorldContactListener());
 
     }
     public void update(float dt){
@@ -72,6 +74,8 @@ public class PlayScreen implements Screen {
         gameCam.update();
         renderer.setView(gameCam);
         player.update(dt);
+        hud.update(dt);
+
         world.step(1/60f,6,2);
         if(player.b2body.getPosition().x>2&&player.b2body.getPosition().x<9.2){
         gameCam.position.x = player.b2body.getPosition().x;
@@ -83,7 +87,7 @@ public class PlayScreen implements Screen {
         }
         if(player.b2body.getPosition().y>0.98&&player.b2body.getPosition().y<5.20){
         gameCam.position.y = player.b2body.getPosition().y;}
-        //hud.setWorldTimer((int) player.b2body.getPosition().x);
+
     }
     @Override
     public void show() {
@@ -101,8 +105,8 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         player.draw(game.batch);
         game.batch.end();
-//        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-//        hud.stage.draw();
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+       hud.stage.draw();
 
 
     }
